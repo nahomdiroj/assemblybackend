@@ -1,8 +1,8 @@
 package com.nahom.assembly.model;
 
 import java.math.BigDecimal;
-
-
+import java.time.LocalDateTime;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,13 +23,17 @@ public class Sherholderdetail {
     private Long id;
 
     private BigDecimal devidend;
+
+    @Column(name = "nameamh", columnDefinition = "nvarchar(255)")
     private String nameamh;
     private String nameeng;
-    private BigDecimal paid_capital;
+    private BigDecimal paidcapital;
     private String phone;
-    private String share_holder_id;
-    private Long total_capital;
-    private Long sharesubsription;
+    private String shareholderid;
+    private BigDecimal totalcapital;
+    private BigDecimal sharesubsription;
     private int attendance;
-    private String fiscal_year;
+    private LocalDateTime attendanceTimestamp;
+    private String fiscalyear;
+    private BigDecimal votingsubscription;
  }

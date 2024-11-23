@@ -1,6 +1,8 @@
 package com.nahom.assembly.controller;
 
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +30,7 @@ import com.nahom.assembly.webtoken.LoginForm;
 
 
 
-// @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "Authorization")
+ @CrossOrigin(origins = "http://localhost:5173", allowedHeaders = "Authorization")
 @RestController
 @RequestMapping("/api")
 public class ContentController {
@@ -63,6 +65,11 @@ public class ContentController {
     public List<Sherholderdetail> searchname(@PathVariable String name) {
         return sharerepo.findByNameengStartsWith(name);
     }
+
+    @GetMapping("/admin/shareid/{shareid}")
+    public List<Sherholderdetail> searchshareholderId(@PathVariable String shareid) {
+        return sharerepo.findByShareholderid(shareid);
+    }
 // @GetMapping("/admin/getperson/{id}")
 // public String getuserdata(@PathVariable Long id) {
     
@@ -87,6 +94,10 @@ public Optional<Sherholderdetail> getSherholderdetail( @PathVariable Long id){
         Sherholderdetail shareholder = temp.get();
         shareholder.setAttendance(1); // Set attendance to 1 or any desired value
 
+
+          // Set the timestamp
+        shareholder.setAttendanceTimestamp(LocalDateTime.now());
+
         // Save the updated entity back to the repository
         sharerepo.save(shareholder);
 
@@ -110,6 +121,11 @@ public Optional<Sherholderdetail> getSherholderdetail( @PathVariable Long id){
         // Update the attendance value, for example, to mark attendance
         Sherholderdetail shareholder = temp.get();
         shareholder.setAttendance(0); // Set attendance to 1 or any desired value
+
+          
+            // Set the timestamp
+        shareholder.setAttendanceTimestamp(LocalDateTime.now());
+
 
         // Save the updated entity back to the repository
         sharerepo.save(shareholder);
@@ -143,5 +159,37 @@ public Optional<Sherholderdetail> getSherholderdetail( @PathVariable Long id){
             throw new UsernameNotFoundException("Invalid credentials");
         }
     }
+
+
+        // Endpoint for shareholders with attendance = 1
+        @GetMapping("/admin/present")
+        public List<Sherholderdetail> findByAttendanceAndSubscriptionpresent() {
+            return sharerepo.findByAttendanceAndSharesubsriptionGreaterThan(1,0);
+        }
+
+        // Endpoint for shareholders with attendance = 0
+        @GetMapping("/admin/absent")
+        public List<Sherholderdetail> findByAttendanceAndSubscription() {
+            return sharerepo.findByAttendanceAndSharesubsriptionGreaterThan(0,0);
+        }
+        @GetMapping("/admin/countp")
+        public Long countpresaent() {
+            return sharerepo.countPresent();
+        }
+        @GetMapping("/admin/counta")
+        public Long countabsent() {
+            return sharerepo.countAbsent();
+        }
+        @GetMapping("/admin/sumvoting")
+        public BigDecimal sumvoting() {
+            return sharerepo.sumvotingsubscriptionForPresent();
+        }
+
+        @GetMapping("/admin/sumsub")
+        public BigDecimal sumsub() {
+            return sharerepo.sumShareSubscription();
+        }
+
+
 }
 
